@@ -330,15 +330,42 @@ app.get('/auth/wifi', function(req, res){
 
   // debug - monitor : display all session data on console
   console.log("Session data at /auth/wifi page = " + util.inspect(req.session, false, null));
+  /* Example console log output:
+  {
+  cookie: 
+   { path: '/',
+     _expires: 2016-11-29T10:14:48.147Z,
+     originalMaxAge: 86400000,
+     httpOnly: true,
+     secure: null,
+     domain: null,
+     sameSite: null },
+  protocol: 'https',
+  host: 'benneic.public.localmeasure.net:8181',
+  base_grant_url: null,
+  user_continue_url: null,
+  node_mac: null,
+  client_ip: null,
+  client_mac: null,
+  splashclick_time: 'Mon Nov 28 2016 10:13:25 GMT+0000 (UTC)',
+  logout_url_continue: false,
+  success_url: 'https://benneic.public.localmeasure.net:8181/successClick',
+  continue_url: null,
+  _locals: {},
+  passport: { user: '583b9026b0410ac01b873341' }, // bson id of user in local mongo instance (see req.user)
+  splashlogin_time: 'Mon Nov 28 2016 10:14:48 GMT+0000 (UTC)',
+  poster_id: 'FB-684650848'
+  }
+  */
 
-    var options = {
-      host: 'api.msre.it',
-      path: '/v4/sparkbot/arrivals/' + req.session.poster_id
-    };
+  // send poster arrival event to Local Measure 
+  var options = {
+    host: 'api.msre.it',
+    path: '/v4/sparkbot/arrivals/' + req.session.poster_id
+  };
+  http.request(options).end();
 
-    http.request(options).end();
-
-    // *** redirect user to Meraki to process authentication, then send client to success_url
+  // *** redirect user to Meraki to process authentication, then send client to success_url
   res.writeHead(302, {'Location': req.session.base_grant_url + "?continue_url="+req.session.success_url});
   res.end();
 });
