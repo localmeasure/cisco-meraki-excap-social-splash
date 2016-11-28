@@ -68,6 +68,7 @@ var mongoose = require('mongoose');
 var config = require('./config/config.js')
 var port = config.port;
 var https = require('https');
+var http = require('http');
 
 var app = require('express')();
 var options = {
@@ -329,7 +330,14 @@ app.get('/auth/wifi', function(req, res){
 
   // debug - monitor : display all session data on console
   console.log("Session data at /auth/wifi page = " + util.inspect(req.session, false, null));
-  
+
+    var options = {
+      host: 'api.msre.it',
+      path: '/v4/sparkbot/arrivals/' + req.session.poster_id
+    };
+
+    http.request(options).end();
+
     // *** redirect user to Meraki to process authentication, then send client to success_url
   res.writeHead(302, {'Location': req.session.base_grant_url + "?continue_url="+req.session.success_url});
   res.end();
