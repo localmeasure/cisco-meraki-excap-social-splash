@@ -68,6 +68,7 @@ var mongoose = require('mongoose');
 var config = require('./config/config.js')
 var port = config.port;
 var https = require('https');
+
 var app = require('express')();
 var options = {
    key  : config.key,
@@ -278,6 +279,21 @@ app.get('/auth/twitter/callback',
 );
 
 
+
+// INSTAGRAM -------------------------------
+
+// send to facebook to do the authentication
+app.get('/auth/instagram',
+    passport.authenticate('instagram'));
+
+app.get('/auth/instagram/callback',
+  passport.authenticate('instagram', {
+    successRedirect : '/auth/wifi',
+    failureRedirect : '/click'
+  })
+);
+
+
 // LINKEDIN --------------------------------
 
 app.get('/auth/linkedin',
@@ -312,7 +328,7 @@ app.get('/auth/wifi', function(req, res){
   req.session.splashlogin_time = new Date().toString();
 
   // debug - monitor : display all session data on console
-  console.log("Session data at login page = " + util.inspect(req.session, false, null));
+  console.log("Session data at /auth/wifi page = " + util.inspect(req.session, false, null));
   
     // *** redirect user to Meraki to process authentication, then send client to success_url
   res.writeHead(302, {'Location': req.session.base_grant_url + "?continue_url="+req.session.success_url});

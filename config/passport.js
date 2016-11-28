@@ -3,6 +3,7 @@
 var LocalStrategy    = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy  = require('passport-twitter').Strategy;
+var InstagramStrategy  = require('passport-instagram').Strategy;
 var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
 var LinkedInStrategy = require('passport-linkedin').Strategy;
 
@@ -469,5 +470,41 @@ module.exports = function(passport) {
         });
 
     }));
+    
+    
+    
+    // =========================================================================
+    // Instagram ================================================================
+    // =========================================================================
+    passport.use(new InstagramStrategy({
+        clientID        : configAuth.instagramAuth.clientID,
+        clientSecret    : configAuth.instagramAuth.clientSecret,
+        callbackURL     : configAuth.instagramAuth.callbackURL,
+        profileFields   : ['id', 'name', 'email'],
+        passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
+    },
+    function(req, token, refreshToken, profile, done) {
+        // asynchronous
+        process.nextTick(function() {
+            console.log('Not logged in: ' + profile)
+            // // check if the user is already logged in
+            // if (!req.user) {
+
+            //     console.log('Not logged in: ' + profile)
+
+            // } else {
+            //     // user already exists and is logged in, we have to link accounts
+            //     var user            = req.user; // pull the user out of the session
+
+            //     console.log('User logged in')
+            //     console.log(profile)
+            //     console.log(user)
+
+            // }
+        });
+
+    }));
+    
+
 
 };

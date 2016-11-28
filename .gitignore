@@ -45,3 +45,8 @@ config.js
 *DS_Store
 .DS_Store
 
+*.cer
+*.crt
+*.key
+
+

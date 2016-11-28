@@ -22,9 +22,11 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.1",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "~1.1.0",
     "connect-mongodb-session": "^1.0.6",
     "cookie-parser": "^1.4.1",
     "express": "^4.13.3",
+    "express-mongo": "~0.3.0",
     "express-mongo-rest": "^0.1.1",
     "express-session": "^1.12.1",
     "express3-handlebars": "^0.5.2",
@@ -34,12 +36,11 @@
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.0",
     "passport-google-oauth": "^1.0.0",
+    "passport-instagram": "^1.0.0",
+    "passport-linkedin": "~1.0.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
     "path": "^0.12.7",
-    "passport-linkedin": "~1.0.0",
-    "session": "~0.1.0",
-    "connect-mongo": "~1.1.0",
-    "express-mongo": "~0.3.0"
+    "session": "~0.1.0"
   }
 }
