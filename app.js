@@ -101,9 +101,6 @@ var flash    = require('connect-flash');
 app.use(morgan('dev')); // log every request to the console
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-require('./config/passport')(passport); // pass passport for configuration
-app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
 app.use(cookieParser()); // read cookies (needed for auth)
 
 // =================================
@@ -133,7 +130,9 @@ app.use(session({
 }));
 
 
-
+require('./config/passport')(passport); // pass passport for configuration
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
 
 
 // instruct the app to use the `bodyParser()` middleware for all routes
@@ -209,7 +208,8 @@ app.get('/successClick', function (req, res) {
   req.session.host = req.headers.host;
   req.session.success_time = new Date();
     
-  console.log("Session data at success page = " + util.inspect(req.session, false, null));
+  //console.log("Session data at success page = " + util.inspect(req.session, false, null));
+  //console.log("User data at success page = " + util.inspect(req.user, false, null));
 
   // render sucess page using handlebars template and send in session data
   res.render('success', req.session);
@@ -261,7 +261,7 @@ app.get('/auth/facebook',
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', {
     successRedirect : '/auth/wifi',
-    failureRedirect : '/auth/facebook'
+    failureRedirect : '/click'
   })
 );
 
@@ -274,7 +274,7 @@ app.get('/auth/twitter',
 app.get('/auth/twitter/callback',
   passport.authenticate('twitter', {
     successRedirect : '/auth/wifi',
-    failureRedirect : '/auth/twitter'
+    failureRedirect : '/click'
   })
 );
 
@@ -302,7 +302,7 @@ app.get('/auth/linkedin',
 app.get('/auth/linkedin/callback',
   passport.authenticate('linkedin', {
     successRedirect : '/auth/wifi',
-    failureRedirect : '/auth/linkedin'
+    failureRedirect : '/click'
   }) 
 );
 
@@ -315,7 +315,7 @@ app.get('/auth/google', passport.authenticate('google'));
 app.get('/auth/google/callback',
   passport.authenticate('google', {
     successRedirect : '/auth/wifi',
-    failureRedirect : '/auth/google'
+    failureRedirect : '/click'
   })
 );
 
@@ -335,49 +335,6 @@ app.get('/auth/wifi', function(req, res){
   res.end();
 });
 
-// ################################################################
-// Sign-on Splash Page /w RADIUS username and password
-// ################################################################
-
-// #######
-// signon page
-// #######
-app.get('/signon', function (req, res) {
-
-  // extract parameters (queries) from URL
-  req.session.protocol = req.protocol;
-  req.session.host = req.headers.host;
-  req.session.login_url = req.query.login_url;
-  req.session.continue_url = req.query.continue_url;
-  req.session.ap_name = req.query.ap_name;
-  req.session.ap_tags = req.query.ap_tags;
-  req.session.client_ip = req.query.client_ip;
-  req.session.client_mac = req.query.client_mac;
-  req.session.success_url =  req.protocol + '://' + req.session.host + "/successSignOn";
-  req.session.signon_time = new Date();
-    // display data for debugging purposes
-  console.log("Session data at signon page = " + util.inspect(req.session, false, null));
-
-  res.render('sign-on', req.session);
-});
-
-// #############
-// success for sign on page
-// #############
-app.get('/successSignOn', function (req, res) {
-  // extract parameters (queries) from URL
-  req.session.host = req.headers.host;
-  req.session.success_time = new Date();
-  req.session.logout_url = req.query.logout_url;
-  req.session.logout_url_continue = req.query.logout_url + "&continue_url=" + req.session.protocol+ '://' + req.session.host + "/logout";
-  console.log("Logout URL = " + util.inspect(req.logout_url_continue)); 
-
-    
-  console.log("Session data at success page = " + util.inspect(req.session, false, null));
-
-  // render sucess page using handlebars template and send in session data
-  res.render('success', req.session);
-});
 
 // #############
 // logged-out page
